@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Sistema de gestión para librería escolar - Control de inventario, ventas y reportes">
+    <title>LIBRERÍA BIGMOTTI - Gestión de Librería y Papelería</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="Logo de LIBRERÍA BIGMOTTI.jpeg" alt="Logo LIBRERÍA BIGMOTTI" class="logo-img">
+                <h1>LIBRERÍA BIGMOTTI</h1>
+            </div>
+            <div class="header-actions">
+                <div class="search-bar">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="2" />
+                        <path d="M14 14L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                    <input type="text" id="globalSearch" placeholder="Buscar productos...">
+                </div>
+                <button class="btn-icon" id="notificationBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" />
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" />
+                    </svg>
+                    <span class="notification-badge" id="notificationCount">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="sidebar">
+        <ul class="nav-menu">
+            <li class="nav-item active" data-view="dashboard">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="3" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2" />
+                    <rect x="14" y="3" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2" />
+                    <rect x="3" y="14" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2" />
+                    <rect x="14" y="14" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2" />
+                </svg>
+                <span>Dashboard</span>
+            </li>
+            <li class="nav-item" data-view="inventory">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                        stroke="currentColor" stroke-width="2" />
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" stroke="currentColor" stroke-width="2" />
+                    <line x1="12" y1="22.08" x2="12" y2="12" stroke="currentColor" stroke-width="2" />
+                </svg>
+                <span>Inventario</span>
+            </li>
+            <li class="nav-item" data-view="sales">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <circle cx="9" cy="21" r="1" fill="currentColor" />
+                    <circle cx="20" cy="21" r="1" fill="currentColor" />
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Nueva Venta</span>
+            </li>
+            <li class="nav-item" data-view="history">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 3h18v18H3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <path d="M8 3v18M3 8h18M3 16h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Historial</span>
+            </li>
+            <li class="nav-item" data-view="reports">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 20V10M12 20V4M6 20v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Reportes</span>
+            </li>
+            <li class="nav-item" data-view="settings">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                    <path
+                        d="M12 1v6m0 6v6m8.66-15l-3 5.2M9.34 12.8l-3 5.2m12.66.8l-3-5.2M9.34 11.2l-3-5.2m12.66 0l-3 5.2M6.34 17.8l-3-5.2"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Configuración</span>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard View -->
+        <div id="dashboardView" class="view active">
+            <div class="view-header">
+                <h2>Dashboard</h2>
+                <p class="subtitle">Resumen general de tu librería</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path
+                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                                stroke="currentColor" stroke-width="2" />
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Total Productos</p>
+                        <h3 class="stat-value" id="totalProducts">0</h3>
+                        <p class="stat-change positive">+12% vs último mes</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <line x1="12" y1="1" x2="12" y2="23" stroke="currentColor" stroke-width="2" />
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor"
+                                stroke-width="2" />
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Ventas Hoy</p>
+                        <h3 class="stat-value" id="salesToday">$0</h3>
+                        <p class="stat-change positive">+8% vs ayer</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <circle cx="9" cy="21" r="1" fill="currentColor" />
+                            <circle cx="20" cy="21" r="1" fill="currentColor" />
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
+                                stroke="currentColor" stroke-width="2" />
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Ventas del Mes</p>
+                        <h3 class="stat-value" id="salesMonth">$0</h3>
+                        <p class="stat-change positive">+15% vs mes anterior</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path
+                                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                                stroke="currentColor" stroke-width="2" />
+                            <line x1="12" y1="9" x2="12" y2="13" stroke="currentColor" stroke-width="2" />
+                            <circle cx="12" cy="17" r="0.5" fill="currentColor" stroke="currentColor" />
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Stock Bajo</p>
+                        <h3 class="stat-value" id="lowStock">0</h3>
+                        <p class="stat-change negative">Requiere atención</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Productos Más Vendidos</h3>
+                        <select id="topProductsPeriod" class="filter-select">
+                            <option value="today">Hoy</option>
+                            <option value="week">Esta Semana</option>
+                            <option value="month" selected>Este Mes</option>
+                        </select>
+                    </div>
+                    <div class="card-content">
+                        <div id="topProductsList" class="top-products-list">
+                            <p class="empty-state">No hay datos disponibles</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Productos con Stock Bajo</h3>
+                        <button class="btn-text" id="viewAllLowStock">Ver todos</button>
+                    </div>
+                    <div class="card-content">
+                        <div id="lowStockList" class="low-stock-list">
+                            <p class="empty-state">¡Excelente! Todos los productos tienen stock suficiente</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory View -->
+        <div id="inventoryView" class="view">
+            <div class="view-header">
+                <h2>Inventario</h2>
+                <button class="btn-primary" id="addProductBtn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <line x1="10" y1="4" x2="10" y2="16" stroke="currentColor" stroke-width="2" />
+                        <line x1="4" y1="10" x2="16" y2="10" stroke="currentColor" stroke-width="2" />
+                    </svg>
+                    Agregar Producto
+                </button>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Categoría</label>
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="">Todas las categorías</option>
+                        <option value="cuadernos">Cuadernos y Carpetas</option>
+                        <option value="escritura">Escritura y Corrección</option>
+                        <option value="mochilas">Mochilas y Cartucheras</option>
+                        <option value="arte">Arte y Dibujo</option>
+                        <option value="papeleria">Papelería</option>
+                        <option value="oficina">Oficina</option>
+                        <option value="otros">Otros</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Stock</label>
+                    <select id="stockFilter" class="filter-select">
+                        <option value="">Todos</option>
+                        <option value="low">Stock Bajo</option>
+                        <option value="available">Disponible</option>
+                        <option value="out">Sin Stock</option>
+                    </select>
+                </div>
+                <button class="btn-secondary" id="exportInventoryBtn">Exportar a Excel</button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th>Categoría</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTableBody">
+                        <tr>
+                            <td colspan="7" class="empty-state">No hay productos en el inventario</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sales View -->
+        <div id="salesView" class="view">
+            <div class="view-header">
+                <h2>Nueva Venta</h2>
+                <p class="subtitle">Registra una nueva venta</p>
+            </div>
+
+            <div class="sales-container">
+                <div class="sales-left">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Buscar Producto</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="search-product">
+                                <input type="text" id="productSearch"
+                                    placeholder="Buscar por nombre o código de barras...">
+                                <button class="btn-icon" id="scanBarcodeBtn" title="Escanear código de barras">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor"
+                                            stroke-width="2" />
+                                        <line x1="6" y1="7" x2="6" y2="17" stroke="currentColor" stroke-width="2" />
+                                        <line x1="9" y1="7" x2="9" y2="17" stroke="currentColor" stroke-width="1.5" />
+                                        <line x1="12" y1="7" x2="12" y2="17" stroke="currentColor" stroke-width="3" />
+                                        <line x1="15" y1="7" x2="15" y2="17" stroke="currentColor" stroke-width="1.5" />
+                                        <line x1="18" y1="7" x2="18" y2="17" stroke="currentColor" stroke-width="2" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div id="productSearchResults" class="search-results"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sales-right">
+                    <div class="card cart-card">
+                        <div class="card-header">
+                            <h3>Carrito de Venta</h3>
+                            <button class="btn-text" id="clearCartBtn">Limpiar</button>
+                        </div>
+                        <div class="card-content">
+                            <div id="cartItems" class="cart-items">
+                                <p class="empty-state">El carrito está vacío</p>
+                            </div>
+
+                            <div class="cart-totals">
+                                <div class="total-row">
+                                    <span>Subtotal:</span>
+                                    <span id="cartSubtotal">$0.00</span>
+                                </div>
+                                <div class="total-row">
+                                    <span>Descuento:</span>
+                                    <div class="discount-input">
+                                        <input type="number" id="discountInput" min="0" max="100" value="0">
+                                        <span>%</span>
+                                    </div>
+                                </div>
+                                <div class="total-row discount-amount">
+                                    <span></span>
+                                    <span id="discountAmount">-$0.00</span>
+                                </div>
+                                <div class="total-row total">
+                                    <span>Total:</span>
+                                    <span id="cartTotal">$0.00</span>
+                                </div>
+                            </div>
+
+                            <div class="payment-method">
+                                <label>Método de Pago:</label>
+                                <div class="payment-options">
+                                    <label class="radio-label">
+                                        <input type="radio" name="paymentMethod" value="efectivo" checked>
+                                        <span>Efectivo</span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="paymentMethod" value="tarjeta">
+                                        <span>Tarjeta</span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="paymentMethod" value="transferencia">
+                                        <span>Transferencia</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button class="btn-primary btn-large" id="completeSaleBtn" disabled>
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <polyline points="6 10 9 13 14 7" stroke="currentColor" stroke-width="2"
+                                        fill="none" />
+                                    <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" />
+                                </svg>
+                                Completar Venta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History View -->
+        <div id="historyView" class="view">
+            <div class="view-header">
+                <h2>Historial de Ventas</h2>
+                <button class="btn-secondary" id="exportHistoryBtn">Exportar a Excel</button>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Fecha Desde</label>
+                    <input type="date" id="dateFrom" class="filter-input">
+                </div>
+                <div class="filter-group">
+                    <label>Fecha Hasta</label>
+                    <input type="date" id="dateTo" class="filter-input">
+                </div>
+                <div class="filter-group">
+                    <label>Método de Pago</label>
+                    <select id="paymentFilter" class="filter-select">
+                        <option value="">Todos</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="tarjeta">Tarjeta</option>
+                        <option value="transferencia">Transferencia</option>
+                    </select>
+                </div>
+                <button class="btn-secondary" id="applyHistoryFilters">Aplicar Filtros</button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>N° Venta</th>
+                            <th>Productos</th>
+                            <th>Total</th>
+                            <th>Método de Pago</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <tr>
+                            <td colspan="7" class="empty-state">No hay ventas registradas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Reports View -->
+        <div id="reportsView" class="view">
+            <div class="view-header">
+                <h2>Reportes</h2>
+                <p class="subtitle">Análisis y estadísticas de ventas</p>
+            </div>
+
+            <div class="reports-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Ventas por Categoría</h3>
+                        <select id="categoryReportPeriod" class="filter-select">
+                            <option value="today">Hoy</option>
+                            <option value="week">Esta Semana</option>
+                            <option value="month" selected>Este Mes</option>
+                            <option value="year">Este Año</option>
+                        </select>
+                    </div>
+                    <div class="card-content">
+                        <div id="categoryChart" class="chart-container">
+                            <p class="empty-state">No hay datos disponibles</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Ventas Diarias</h3>
+                        <select id="dailySalesPeriod" class="filter-select">
+                            <option value="week">Última Semana</option>
+                            <option value="month" selected>Último Mes</option>
+                            <option value="quarter">Último Trimestre</option>
+                        </select>
+                    </div>
+                    <div class="card-content">
+                        <div id="dailySalesChart" class="chart-container">
+                            <p class="empty-state">No hay datos disponibles</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Resumen de Ventas</h3>
+                    <button class="btn-secondary" id="exportReportBtn">Exportar Reporte</button>
+                </div>
+                <div class="card-content">
+                    <div class="summary-grid" id="salesSummary">
+                        <div class="summary-item">
+                            <p class="summary-label">Total Ventas (Mes)</p>
+                            <p class="summary-value">$0.00</p>
+                        </div>
+                        <div class="summary-item">
+                            <p class="summary-label">Promedio por Venta</p>
+                            <p class="summary-value">$0.00</p>
+                        </div>
+                        <div class="summary-item">
+                            <p class="summary-label">Producto Más Vendido</p>
+                            <p class="summary-value">-</p>
+                        </div>
+                        <div class="summary-item">
+                            <p class="summary-label">Categoría Top</p>
+                            <p class="summary-value">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings View -->
+        <div id="settingsView" class="view">
+            <div class="view-header">
+                <h2>Configuración</h2>
+                <p class="subtitle">Gestiona la configuración de tu librería</p>
+            </div>
+
+            <div class="settings-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Información del Negocio</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="form-group">
+                            <label>Nombre de la Librería</label>
+                            <input type="text" id="businessName" class="form-input" placeholder="Mi Librería">
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="tel" id="businessPhone" class="form-input" placeholder="+54 9 11 1234-5678">
+                        </div>
+                        <div class="form-group">
+                            <label>Dirección</label>
+                            <input type="text" id="businessAddress" class="form-input" placeholder="Calle 123, Ciudad">
+                        </div>
+                        <button class="btn-primary" id="saveBusinessInfo">Guardar Cambios</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Stock Mínimo</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="form-group">
+                            <label>Cantidad Mínima de Stock</label>
+                            <input type="number" id="minStockAlert" class="form-input" value="10" min="1">
+                            <p class="form-help">Recibirás una alerta cuando el stock baje de este nivel</p>
+                        </div>
+                        <button class="btn-primary" id="saveStockSettings">Guardar</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Datos y Backup</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="settings-actions">
+                            <button class="btn-secondary" id="exportDataBtn">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M10 14V3M10 14L6 10M10 14l4-4M17 17H3" stroke="currentColor"
+                                        stroke-width="2" />
+                                </svg>
+                                Exportar Todos los Datos
+                            </button>
+                            <button class="btn-secondary" id="importDataBtn">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M10 3v11M10 3L6 7M10 3l4 4M17 17H3" stroke="currentColor"
+                                        stroke-width="2" />
+                                </svg>
+                                Importar Datos
+                            </button>
+                            <button class="btn-danger" id="clearDataBtn">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M3 6h14M8 6V4h4v2m1 0v10a2 2 0 01-2 2H7a2 2 0 01-2-2V6h8z"
+                                        stroke="currentColor" stroke-width="2" />
+                                </svg>
+                                Limpiar Todos los Datos
+                            </button>
+                        </div>
+                        <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: Add/Edit Product -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="productModalTitle">Agregar Producto</h3>
+                <button class="modal-close" id="closeProductModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <div class="form-group">
+                        <label>Nombre del Producto *</label>
+                        <input type="text" id="productName" class="form-input" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Código/Barras</label>
+                            <input type="text" id="productCode" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Categoría *</label>
+                            <select id="productCategory" class="form-input" required>
+                                <option value="cuadernos">Cuadernos y Carpetas</option>
+                                <option value="escritura">Escritura y Corrección</option>
+                                <option value="mochilas">Mochilas y Cartucheras</option>
+                                <option value="arte">Arte y Dibujo</option>
+                                <option value="papeleria">Papelería</option>
+                                <option value="oficina">Oficina</option>
+                                <option value="otros">Otros</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Precio *</label>
+                            <input type="number" id="productPrice" class="form-input" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Stock *</label>
+                            <input type="number" id="productStock" class="form-input" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea id="productDescription" class="form-input" rows="3"></textarea>
+                    </div>
+                    <input type="hidden" id="productId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelProductBtn">Cancelar</button>
+                <button class="btn-primary" id="saveProductBtn">Guardar Producto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Sale Detail -->
+    <div id="saleDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detalle de Venta</h3>
+                <button class="modal-close" id="closeSaleDetailModal">&times;</button>
+            </div>
+            <div class="modal-body" id="saleDetailContent">
+                <!-- Content will be populated dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="closeSaleDetailBtn">Cerrar</button>
+                <button class="btn-primary" id="printSaleBtn">Imprimir Ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
